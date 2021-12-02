@@ -12,6 +12,7 @@ class Coord(NamedTuple):
     def __mul__(self, amount: int) -> 'Coord':
         return Coord(x=self.x * amount, y=self.y * amount)
 
+    # Make it so that an iterable of these can be summed
     def __radd__(self, other: int) -> 'Coord':
         if other == 0:
             return self
@@ -29,11 +30,13 @@ class AimedCoord(NamedTuple):
     aim: int
 
     def __add__(self, other: 'AimedCoord') -> 'AimedCoord':
-        return AimedCoord(x=self.x + other.x, y=self.y + (other.y    * other.x * self.aim), aim=self.aim + other.aim)
+        # The y variable is where all the magic happens
+        return AimedCoord(x=self.x + other.x, y=self.y + (other.y * other.x * self.aim), aim=self.aim + other.aim)
 
     def __mul__(self, amount: int):
         return AimedCoord(x=self.x * amount, y=self.y, aim=self.aim*amount)
 
+    # Make it so that an iterable of these can be summed
     def __radd__(self, other: int) -> 'AimedCoord':
         if other == 0:
             return self
