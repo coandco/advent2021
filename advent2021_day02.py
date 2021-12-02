@@ -54,8 +54,5 @@ if __name__ == '__main__':
     print(f"Part one: {part_one_position.x * part_one_position.y}")
 
     PART_TWO_INPUT = [AimedCoord.from_str(line) for line in read_data().splitlines()]
-    current = AimedCoord(0, 0, 0)
-    for coord in PART_TWO_INPUT:
-        current += coord
-
-    print(f"Part two: {current.x * current.y}")
+    part_two_position = sum(PART_TWO_INPUT, start=AimedCoord(0, 0, 0))
+    print(f"Part two: {part_two_position.x * part_two_position.y}")
