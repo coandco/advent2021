@@ -61,37 +61,33 @@ def score_board(board: np.ndarray, marking: np.ndarray) -> int:
     return score
 
 
-def part_one(called_numbers: List[int], boards: List[np.ndarray]) -> int:
-    markings = [np.zeros((5, 5), dtype=bool) for x in range(len(INPUT[1:]))]
-    for number in called_numbers:
-        markings = mark_boards(boards, markings, number)
-        completed = find_completed_board(boards, markings)
-        if completed is not None:
-            completed_board, completed_marking = completed
-            part_one_score = score_board(completed_board, completed_marking)
-            return part_one_score * number
-
-
-def part_two(called_numbers: List[int], boards: List[np.ndarray]) -> int:
+def run_bingo(called_numbers: List[int], boards: List[np.ndarray]) -> Tuple[int, int]:
     markings = [np.zeros((5, 5), dtype=bool) for x in range(len(INPUT[1:]))]
     completed_boards = []
     completed_markings = []
+    part_one_score = 0
+    part_one_number = 0
     for number in called_numbers:
         markings = mark_boards(boards, markings, number)
         boards, markings, newly_completed_boards, newly_completed_markings = move_completed_boards(boards, markings)
+        # If we're adding our first completed board to the list, note it down
+        if len(completed_boards) == 0 and len(newly_completed_boards) > 0:
+            part_one_score = score_board(newly_completed_boards[0], newly_completed_markings[0])
+            part_one_number = number
         completed_boards.extend(newly_completed_boards)
         completed_markings.extend(newly_completed_markings)
         if len(boards) == 0:
             part_two_score = score_board(completed_boards[-1], completed_markings[-1])
-            return part_two_score * number
+            return part_one_score * part_one_number, part_two_score * number
 
 
 if __name__ == '__main__':
     INPUT = read_data().split("\n\n")
     called_numbers = [int(x) for x in INPUT[0].split(",")]
     boards = [read_bingo_board(x) for x in INPUT[1:]]
-    print(f"Part one: {part_one(called_numbers, boards)}")
-    print(f"Part two: {part_two(called_numbers, boards)}")
+    part_one, part_two = run_bingo(called_numbers, boards)
+    print(f"Part one: {part_one}")
+    print(f"Part two: {part_two}")
 
 
 
