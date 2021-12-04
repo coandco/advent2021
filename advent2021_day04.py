@@ -11,73 +11,55 @@ def read_bingo_board(boardstr: str) -> np.ndarray:
     return board
 
 
-def mark_boards(boards: List[np.ndarray], markings: List[np.ndarray], to_mark: int) -> List[np.ndarray]:
+def mark_boards(boards: List[np.ndarray], to_mark: int) -> List[np.ndarray]:
     for i, board in enumerate(boards):
-        for idx, value in np.ndenumerate(board):
-            if value == to_mark:
-                markings[i][idx] = True
-    return markings
+        board[board == to_mark] = -1
+        boards[i] = board
+    return boards
 
 
-def check_board(board_marking: np.ndarray) -> bool:
+def check_board(board: np.ndarray) -> bool:
     # Check each row
-    for i in range(board_marking.shape[0]):
-        slice = board_marking[i, :]
+    marked_locations = board == -1
+    for i in range(marked_locations.shape[0]):
+        slice = marked_locations[i, :]
         if np.all(slice):
             return True
-    for i in range(board_marking.shape[1]):
-        if np.all(board_marking[:, i]):
+    for i in range(marked_locations.shape[1]):
+        if np.all(marked_locations[:, i]):
             return True
     return False
 
 
-def find_completed_board(boards: List[np.ndarray], markings: List[np.ndarray]) -> Tuple[np.ndarray, np.ndarray] | None:
-    for i, marking in enumerate(markings):
-        if check_board(marking):
-            return boards[i], markings[i]
-    return None
-
-
-def move_completed_boards(boards: List[np.ndarray], markings: List[np.ndarray]) -> Tuple[List[np.ndarray], List[np.ndarray], List[np.ndarray], List[np.ndarray]]:
+def move_completed_boards(boards: List[np.ndarray]) -> Tuple[List[np.ndarray], List[np.ndarray]]:
     active_boards = []
-    active_markings = []
     completed_boards = []
-    completed_markings = []
-    for i, marking in enumerate(markings):
-        if check_board(marking):
-            completed_boards.append(boards[i])
-            completed_markings.append(markings[i])
+    for board in boards:
+        if check_board(board):
+            completed_boards.append(board)
         else:
-            active_boards.append(boards[i])
-            active_markings.append(markings[i])
-    return active_boards, active_markings, completed_boards, completed_markings
+            active_boards.append(board)
+    return active_boards, completed_boards
 
 
-def score_board(board: np.ndarray, marking: np.ndarray) -> int:
-    score = 0
-    for idx, value in np.ndenumerate(marking):
-        if not value:
-            score += board[idx]
-    return score
+def score_board(board: np.ndarray) -> int:
+    return board[board != -1].sum()
 
 
 def run_bingo(called_numbers: List[int], boards: List[np.ndarray]) -> Tuple[int, int]:
-    markings = [np.zeros((5, 5), dtype=bool) for x in range(len(INPUT[1:]))]
     completed_boards = []
-    completed_markings = []
     part_one_score = 0
     part_one_number = 0
     for number in called_numbers:
-        markings = mark_boards(boards, markings, number)
-        boards, markings, newly_completed_boards, newly_completed_markings = move_completed_boards(boards, markings)
+        boards = mark_boards(boards, number)
+        boards, newly_completed_boards = move_completed_boards(boards)
         # If we're adding our first completed board to the list, note it down
         if len(completed_boards) == 0 and len(newly_completed_boards) > 0:
-            part_one_score = score_board(newly_completed_boards[0], newly_completed_markings[0])
+            part_one_score = score_board(newly_completed_boards[0])
             part_one_number = number
         completed_boards.extend(newly_completed_boards)
-        completed_markings.extend(newly_completed_markings)
         if len(boards) == 0:
-            part_two_score = score_board(completed_boards[-1], completed_markings[-1])
+            part_two_score = score_board(completed_boards[-1])
             return part_one_score * part_one_number, part_two_score * number
 
 
