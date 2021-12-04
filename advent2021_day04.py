@@ -25,6 +25,7 @@ def check_board(board: np.ndarray) -> bool:
         slice = marked_locations[i, :]
         if np.all(slice):
             return True
+    # Check each column
     for i in range(marked_locations.shape[1]):
         if np.all(marked_locations[:, i]):
             return True
