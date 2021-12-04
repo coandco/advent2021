@@ -14,7 +14,6 @@ def read_bingo_board(boardstr: str) -> np.ndarray:
 def mark_boards(boards: List[np.ndarray], to_mark: int) -> List[np.ndarray]:
     for i, board in enumerate(boards):
         board[board == to_mark] = -1
-        boards[i] = board
     return boards
 
 
