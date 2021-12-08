@@ -36,7 +36,7 @@ class Line(NamedTuple):
         inputs, outputs = line.split(" | ", 1)
         return Line(input=inputs.split(" "), output=outputs.split(" "))
 
-    def count_part_one(self):
+    def count_part_one(self) -> int:
         total = 0
         for output in self.output:
             # 1 has 2 segments, 7 has 3, 4 has 4, and 8 has 7
@@ -47,28 +47,26 @@ class Line(NamedTuple):
     def get_input_of_length(self, length: int) -> List[FrozenSet[str]]:
         return [frozenset(x) for x in self.input if len(x) == length]
 
-    def make_mappings(self):
+    def make_mappings(self) -> Dict[str, str]:
         known_mappings = {}
         c_f_set = self.get_input_of_length(2)[0]
         a_c_f_set = self.get_input_of_length(3)[0]
         known_mappings["a"] = get_single_set_value(a_c_f_set - c_f_set)
         a_b_f_g_set = frozenset.intersection(*self.get_input_of_length(6))
         c_d_e_set = frozenset.union(*(x - a_b_f_g_set for x in self.get_input_of_length(6)))
-        known_mappings["c"] = get_single_set_value(frozenset.intersection(c_d_e_set, c_f_set))
-        known_mappings["f"] = get_single_set_value(c_f_set - frozenset(known_mappings["c"]))
-        d_e_set = c_d_e_set - frozenset(known_mappings["c"])
-        b_c_d_f_set = self.get_input_of_length(4)[0]
-        known_mappings["d"] = get_single_set_value(frozenset.intersection(d_e_set, b_c_d_f_set - frozenset(known_mappings["c"])))
-        known_mappings["e"] = get_single_set_value(c_d_e_set - frozenset(known_mappings["c"]) - frozenset(known_mappings["d"]))
-        two_three_five_set = self.get_input_of_length(5)
-        a_d_g_set = frozenset.intersection(*two_three_five_set)
-        d_g_set = a_d_g_set - frozenset(known_mappings["a"])
-        known_mappings["d"] = get_single_set_value(frozenset.intersection(d_g_set, b_c_d_f_set))
-        known_mappings["g"] = get_single_set_value(d_g_set - frozenset(known_mappings["d"]))
-        known_mappings["b"] = get_single_set_value(b_c_d_f_set - frozenset([known_mappings[x] for x in ("c", "d", "f")]))
+        known_mappings["c"] = get_single_set_value(c_d_e_set & c_f_set)
+        known_mappings["f"] = get_single_set_value(c_f_set - {known_mappings["c"]})
+        d_e_set = c_d_e_set - {known_mappings["c"]}
+        b_d_set = self.get_input_of_length(4)[0] - {known_mappings["c"]} - {known_mappings["f"]}
+        known_mappings["d"] = get_single_set_value(d_e_set & b_d_set)
+        known_mappings["e"] = get_single_set_value(c_d_e_set - {known_mappings["c"]} - {known_mappings["d"]})
+        d_g_set = frozenset.intersection(*self.get_input_of_length(5)) - {known_mappings["a"]}
+        known_mappings["d"] = get_single_set_value(d_g_set & b_d_set)
+        known_mappings["g"] = get_single_set_value(d_g_set - {known_mappings["d"]})
+        known_mappings["b"] = get_single_set_value(b_d_set - {known_mappings["d"]})
         return {v: k for k, v in known_mappings.items()}
 
-    def parse_output(self):
+    def parse_output(self) -> int:
         mappings = self.make_mappings()
         real_output = ""
         for output_str in self.output:
@@ -80,7 +78,3 @@ class Line(NamedTuple):
 INPUT = [Line.from_str(x) for x in read_data().splitlines()]
 print(f"Part one: {sum([x.count_part_one() for x in INPUT])}")
 print(f"Part two: {sum([x.parse_output() for x in INPUT])}")
-
-
-
-
