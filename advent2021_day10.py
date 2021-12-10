@@ -1,7 +1,7 @@
 from utils import read_data
 from collections import deque
 from statistics import median
-from typing import Tuple, NamedTuple
+from typing import NamedTuple
 
 
 class PointValue(NamedTuple):
