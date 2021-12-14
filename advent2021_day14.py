@@ -3,15 +3,6 @@ from typing import Tuple, Dict
 from collections import Counter
 
 
-def parse_input(data: str) -> Tuple[str, Dict[str, str]]:
-    template, rules_str = data.split("\n\n", 1)
-    rules = {}
-    for rule in rules_str.splitlines():
-        rule_from, rule_to = rule.split(" -> ", 1)
-        rules[rule_from] = rule_to
-    return template, rules
-
-
 def run_round_countwise(rules: Dict[str, str], letters: Counter, pairs: Counter) -> Tuple[Counter, Counter]:
     new_pairs = Counter()
     for pair in pairs.keys():
@@ -23,7 +14,8 @@ def run_round_countwise(rules: Dict[str, str], letters: Counter, pairs: Counter)
 
 
 if __name__ == '__main__':
-    template, rules = parse_input(read_data())
+    template, rules_str = read_data().split("\n\n", 1)
+    rules = {(rule := line.split(" -> "))[0]: rule[1] for line in rules_str.splitlines()}
     letter_counts, pair_counts = Counter(template), Counter(template[x:x+2] for x in range(len(template)-1))
     for _ in range(10):
         letter_counts, pair_counts = run_round_countwise(rules, letter_counts, pair_counts)
