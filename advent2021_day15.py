@@ -1,8 +1,7 @@
 from utils import read_data
-from collections import deque
-import numpy as np
-import sys
+from heapq import heappush, heappop
 from typing import NamedTuple, Tuple
+import numpy as np
 
 
 class Coord(NamedTuple):
@@ -12,15 +11,11 @@ class Coord(NamedTuple):
     def __add__(self, other: 'Coord') -> 'Coord':
         return Coord(x=self.x+other.x, y=self.y+other.y)
 
+
 NEIGHBORS = [
     Coord(-1, 0),
     Coord(1, 0),
     Coord(0, -1),
-    Coord(0, 1)
-]
-
-PART_ONE_NEIGHBORS = [
-    Coord(1, 0),
     Coord(0, 1)
 ]
 
@@ -32,19 +27,19 @@ def in_bounds(shape: Tuple[int, int], coord: Coord):
 def get_cost_to_goal(riskmap: np.ndarray) -> int:
     costs = np.full(riskmap.shape, fill_value=9999999, dtype=int)
     costs[0, 0] = 0
-    open_nodes = {Coord(0, 0)}
+    open_nodes = [(0, Coord(0, 0))]
+    goal = Coord(riskmap.shape[0]-1, riskmap.shape[1]-1)
     while open_nodes:
-        current_loc, _ = min(((coord, costs[coord]) for coord in open_nodes), key=lambda x: x[1])
-        if current_loc == Coord(riskmap.shape[0]-1, riskmap.shape[1]-1):
-            return costs[-1, -1]
-        open_nodes.remove(current_loc)
+        current_risk, current_loc = heappop(open_nodes)
+        if current_loc == goal:
+            return current_risk
         for direction in NEIGHBORS:
             new_loc = current_loc + direction
             if in_bounds(riskmap.shape, new_loc):
-                new_cost = costs[current_loc] + riskmap[new_loc]
-                if new_cost < costs[new_loc]:
-                    costs[new_loc] = new_cost
-                    open_nodes.add(new_loc)
+                new_risk = current_risk + riskmap[new_loc]
+                if new_risk < costs[new_loc]:
+                    costs[new_loc] = new_risk
+                    heappush(open_nodes, (new_risk, new_loc))
     return -1
 
 
