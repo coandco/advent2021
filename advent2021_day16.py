@@ -15,7 +15,6 @@ OTYPE_EQ = 7
 
 
 class Packet:
-    raw: str
     version: int
     type: int
     length_type: int
@@ -25,7 +24,6 @@ class Packet:
     unused: str
 
     def __init__(self, binstr: str):
-        self.raw = binstr
         self.version, rest = int(binstr[:3], 2), binstr[3:]
         self.type, rest = int(rest[:3], 2), rest[3:]
         if self.type == OTYPE_LITERAL:
@@ -82,7 +80,7 @@ class Packet:
 
 
 if __name__ == '__main__':
-    INPUT = format(int(read_data(), 16), f"0{len(read_data())*4}b")
+    INPUT = f"{int(read_data(), 16):0{len(read_data())*4}b}"
     packet = Packet(INPUT)
     print(f"Part one: {packet.sum_versions()}")
     print(f"Part two: {packet.get_value()}")
