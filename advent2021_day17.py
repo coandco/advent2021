@@ -1,13 +1,5 @@
 from utils import read_data
-from typing import NamedTuple, Tuple, List
-
-
-class Coord(NamedTuple):
-    y: int
-    x: int
-
-    def __add__(self, other: 'Coord') -> 'Coord':
-        return Coord(x=self.x+other.x, y=self.y+other.y)
+from typing import NamedTuple
 
 
 class TargetArea(NamedTuple):
@@ -16,11 +8,11 @@ class TargetArea(NamedTuple):
     min_y: int
     max_y: int
 
-    def hit(self, coord: Coord) -> bool:
-        return self.min_x <= coord.x <= self.max_x and self.min_y <= coord.y <= self.max_y
+    def hit(self, posx: int, posy: int) -> bool:
+        return self.min_x <= posx <= self.max_x and self.min_y <= posy <= self.max_y
 
-    def overshot(self, coord: Coord, velocity: Coord) -> bool:
-        return coord.x > self.max_x or (velocity.y < 0 and coord.y < self.min_y)
+    def overshot(self, posx: int, posy: int, vy: int) -> bool:
+        return posx > self.max_x or (vy < 0 and posy < self.min_y)
 
     @staticmethod
     def from_inputstr(data: str) -> 'TargetArea':
@@ -30,18 +22,17 @@ class TargetArea(NamedTuple):
         return TargetArea(min_x=min_x, max_x=max_x, min_y=min_y, max_y=max_y)
 
 
-def simulate(velocity: Coord, target: TargetArea) -> bool:
-    current_pos = Coord(0, 0)
-    while not target.overshot(current_pos, velocity):
-        current_pos = current_pos + velocity
-        if target.hit(current_pos):
+def simulate(vx: int, vy: int, target: TargetArea) -> bool:
+    posx, posy = 0, 0
+    while not target.overshot(posx, posy, vy):
+        posx, posy = posx+vx, posy+vy
+        if target.hit(posx, posy):
             return True
-        dx = 0
-        if velocity.x > 0:
-            dx = -1
-        elif velocity.x < 0:
-            dx = 1
-        velocity = velocity + Coord(x=dx, y=-1)
+        if vx > 0:
+            vx -= 1
+        elif vx < 0:
+            vx += 1
+        vy -= 1
     return False
 
 
@@ -55,7 +46,7 @@ def part_one(target: TargetArea) -> int:
     num_failures = 0
     last_success = 0
     while num_failures < 100:
-        hit = simulate(Coord(x=vx, y=vy), target)
+        hit = simulate(vx, vy, target)
         if hit:
             last_success = vy
         num_failures = 0 if hit else num_failures + 1
@@ -72,7 +63,7 @@ def part_two(target: TargetArea, max_vy: int) -> int:
     num_successes = 0
     for vx in range(min_vx, target.max_x+1):
         for vy in range(target.min_y, max_vy+1):
-            if simulate(Coord(x=vx, y=vy), target):
+            if simulate(vx, vy, target):
                 num_successes += 1
     return num_successes
 
