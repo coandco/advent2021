@@ -15,16 +15,17 @@ def sfish_to_list(sfish_str: str) -> List:
     ]
 
 
-def find_explosion(sfish_list: List) -> int:
+def find_explosions(sfish_list: List) -> List[int]:
     nest_counter = 0
+    explosions = []
     for i, token in enumerate(sfish_list):
         if token == '[':
             nest_counter += 1
             if nest_counter == 5:
-                return i
+                explosions.append(i)
         elif token == ']':
             nest_counter -= 1
-    return 0
+    return explosions
 
 
 def explode(sfish_list: SnailfishList, loc: int):
@@ -54,9 +55,10 @@ def split(sfish_list: SnailfishList, loc: int):
 
 def reduce(sfish_list: SnailfishList) -> SnailfishList:
     while True:
-        if explosion_loc := find_explosion(sfish_list):
-            explode(sfish_list, explosion_loc)
-            continue
+        loc_adjust = 0
+        for explosion_loc in find_explosions(sfish_list):
+            explode(sfish_list, explosion_loc+loc_adjust)
+            loc_adjust -= 3
         if split_loc := find_split(sfish_list):
             split(sfish_list, split_loc)
             continue
