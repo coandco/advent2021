@@ -1,5 +1,5 @@
 from utils import read_data
-from typing import NamedTuple
+from typing import NamedTuple, Iterator
 
 
 class TargetArea(NamedTuple):
@@ -9,7 +9,7 @@ class TargetArea(NamedTuple):
     max_y: int
 
     def hit(self, posx: int, posy: int) -> bool:
-        return self.min_x <= posx <= self.max_x and self.min_y <= posy <= self.max_y
+        return posx in range(self.min_x, self.max_x+1) and posy in range(self.min_y, self.max_y+1)
 
     def overshot(self, posx: int, posy: int, vy: int) -> bool:
         return posx > self.max_x or (vy < 0 and posy < self.min_y)
@@ -28,30 +28,17 @@ def simulate(vx: int, vy: int, target: TargetArea) -> bool:
         posx, posy = posx+vx, posy+vy
         if target.hit(posx, posy):
             return True
-        if vx > 0:
-            vx -= 1
-        elif vx < 0:
-            vx += 1
+        vx = vx-1 if vx > 0 else vx
         vy -= 1
     return False
 
 
-def part_one(target: TargetArea) -> int:
-    vx = 1
-    while (triangle_num := int(vx * (vx + 1) / 2)) <= target.max_x:
-        if target.min_x <= triangle_num:
-            break
-        vx += 1
-    vy = 1
-    num_failures = 0
-    last_success = 0
-    while num_failures < 100:
-        hit = simulate(vx, vy, target)
-        if hit:
-            last_success = vy
-        num_failures = 0 if hit else num_failures + 1
-        vy += 1
-    return last_success
+def sim_x(vx: int) -> Iterator[int]:
+    pos = 0
+    while vx > 0:
+        pos += vx
+        yield pos
+        vx -= 1
 
 
 def part_two(target: TargetArea, max_vy: int) -> int:
@@ -60,15 +47,10 @@ def part_two(target: TargetArea, max_vy: int) -> int:
         if target.min_x <= triangle_num:
             break
         min_vx += 1
-    num_successes = 0
-    for vx in range(min_vx, target.max_x+1):
-        for vy in range(target.min_y, max_vy+1):
-            if simulate(vx, vy, target):
-                num_successes += 1
-    return num_successes
+    return sum(simulate(vx, vy, target) for vx in range(min_vx, target.max_x+1) for vy in range(target.min_y, max_vy+1))
 
 
 INPUT = TargetArea.from_inputstr(read_data())
-max_vy = part_one(INPUT)
+max_vy = abs(INPUT.min_y) - 1
 print(f"Part one: {max_vy * (max_vy + 1) // 2}")
 print(f"Part two: {part_two(INPUT, max_vy)}")
