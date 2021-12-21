@@ -46,19 +46,21 @@ class Grid:
             output.append(line)
         return "\n".join(output)
 
-    def in_range(self, coord):
-        return self.min_x <= coord.x <= self.max_x and self.min_y <= coord.y <= self.max_y
+    def in_range(self, y, x):
+        return self.min_x <= x <= self.max_x and self.min_y <= y <= self.max_y
 
     def value_index(self, coord):
-        value = 0
+        # This used to use direct or/shift number manipulation, but it turns out string addition/intparse is faster(?!?)
+        value = ""
         for neighbor in NEIGHBORS:
-            value <<= 1
-            new_loc = coord + neighbor
+            # Doing manual non-Coord math here because this is the very innermost loop
+            # and it's about twice as fast to just use raw Tuples instead of NamedTuples
+            new_loc = (coord.y + neighbor.y, coord.x + neighbor.x)
             if self.cycle_num % 2 == 0:
-                value |= (not self.in_range(new_loc)) or (new_loc in self.grid)
+                value += "1" if (not self.in_range(*new_loc)) or (new_loc in self.grid) else "0"
             else:
-                value |= (new_loc in self.grid)
-        return value
+                value += "1" if new_loc in self.grid else "0"
+        return int(value, 2)
 
     def new_value(self, coord):
         return self.index[self.value_index(coord)]
