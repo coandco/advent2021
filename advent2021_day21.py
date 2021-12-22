@@ -1,9 +1,10 @@
 from utils import read_data
 from typing import Generator, List, Tuple, Dict, Optional
+from collections import defaultdict
 
 
 # WorldState: player_locs, player_scores, turn_index
-WorldState = Tuple[Tuple[int, int], Tuple[int, int], int]
+WorldState = Tuple[Tuple[int, int], Tuple[int, int]]
 
 
 def fixed_die(start: int = 1, sides: int = 100) -> Generator[int, None, None]:
@@ -12,19 +13,16 @@ def fixed_die(start: int = 1, sides: int = 100) -> Generator[int, None, None]:
 
 
 def mutate(state: WorldState, roll: int) -> WorldState:
-    locs, scores, pnum = state
+    locs, scores = state
 
-    new_loc = (locs[pnum] + roll) % 10
+    new_loc = (locs[0] + roll) % 10
     # We add one to the score because we're mapping spots 1-10 onto 0-9 so we can do modulo on them
-    new_score = scores[pnum] + new_loc + 1
-    if pnum:
-        return (locs[not pnum], new_loc), (scores[not pnum], new_score), int(not pnum)
-    else:
-        return (new_loc, locs[not pnum]), (new_score, scores[not pnum]), int(not pnum)
+    new_score = scores[0] + new_loc + 1
+    return (locs[1], new_loc), (scores[1], new_score)
 
 
 def state_winner(state: WorldState, limit: int = 21) -> Optional[int]:
-    _, scores, _ = state
+    _, scores = state
     for i, score in enumerate(scores):
         if score >= limit:
             return i
@@ -33,7 +31,7 @@ def state_winner(state: WorldState, limit: int = 21) -> Optional[int]:
 
 def part_one(starting_locs: List[int]) -> int:
     # state: player_locs, player_scores, turn_index
-    state: WorldState = ((starting_locs[0], starting_locs[1]), (0, 0), 0)
+    state: WorldState = ((starting_locs[0], starting_locs[1]), (0, 0))
     die = fixed_die()
     num_rolls = 0
     while (winner := state_winner(state, limit=1000)) is None:
@@ -56,21 +54,22 @@ ROLLS = {6: 7, 5: 6, 7: 6, 4: 3, 8: 3, 3: 1, 9: 1}
 
 
 def part_two(starting_locs: List[int]) -> int:
-    states: Dict[WorldState, int] = {((starting_locs[0], starting_locs[1]), (0, 0), 0): 1}
+    states: Dict[WorldState, int] = {((starting_locs[0], starting_locs[1]), (0, 0)): 1}
     winning_states: List[int] = [0, 0]
 
     while states:
         # Python dicts are ordered since 3.5, and this will get the first-inserted item from the dict and delete it
-        state, universes = next(iter(states.items()))
-        del states[state]
+        new_states = defaultdict(int)
+        for state, universes in states.items():
+            if (winner := state_winner(state, limit=21)) is not None:
+                winning_states[winner] += universes
+                continue
 
-        if (winner := state_winner(state, limit=21)) is not None:
-            winning_states[winner] += universes
-            continue
-
-        for roll, roll_universes in ROLLS.items():
-            new_state = mutate(state, roll)
-            states[new_state] = states.get(new_state, 0) + (universes * roll_universes)
+            for roll, roll_universes in ROLLS.items():
+                new_state = mutate(state, roll)
+                new_states[new_state] += universes * roll_universes
+        winning_states[0], winning_states[1] = winning_states[1], winning_states[0]
+        states = new_states
     return max(winning_states)
 
 
