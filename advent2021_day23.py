@@ -1,7 +1,7 @@
-from dataclasses import dataclass, field
+from dataclasses import field
 from collections import deque
 from utils import read_data
-from typing import NamedTuple, Dict, Optional, List, Tuple, Iterable, Set, Deque
+from typing import NamedTuple, Dict, Optional, Tuple, Iterable, Set, Deque
 from dataclasses import dataclass
 
 # For the record, this is a terrible overcomplicated piece of code that should be taken out back and shot.
@@ -226,12 +226,16 @@ def run_sim(start_state: WorldState, depth: int = 2):
     return seen_states[win_state]
 
 
-TEST = """#############
-#...........#
-###B#C#B#D###
-  #A#D#C#A#
-  #########"""
-INPUT = parse_initial_state(read_data())
-print(f"Part one: {run_sim(INPUT)}")
-UNFOLDED_INPUT = parse_initial_state(read_data(), unfold=True)
-print(f"Part two: {run_sim(UNFOLDED_INPUT, depth=4)}")
+
+def main():
+    initial_state = parse_initial_state(read_data())
+    print(f"Part one: {run_sim(initial_state)}")
+    unfolded_initial_state = parse_initial_state(read_data(), unfold=True)
+    print(f"Part two: {run_sim(unfolded_initial_state, depth=4)}")
+
+
+if __name__ == '__main__':
+    import time
+    start = time.monotonic()
+    main()
+    print(f"Time: {time.monotonic() - start}")

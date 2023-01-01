@@ -1,5 +1,5 @@
 from utils import read_data
-from typing import Tuple, List, Union
+from typing import List, Union
 from math import floor, ceil
 from itertools import combinations
 
@@ -91,7 +91,14 @@ def find_max_magnitude(data: List[str]) -> int:
     return max(get_magnitude(add(*x)) for x in combinations(data, 2))
 
 
+def main():
+    snailfish = [sfish_to_list(x) for x in read_data().splitlines()]
+    print(f"Part one: {get_magnitude(add_all(snailfish))}")
+    print(f"Part two: {find_max_magnitude(snailfish)}")
+
+
 if __name__ == '__main__':
-    INPUT = [sfish_to_list(x) for x in read_data().splitlines()]
-    print(f"Part one: {get_magnitude(add_all(INPUT))}")
-    print(f"Part two: {find_max_magnitude(INPUT)}")
+    import time
+    start = time.monotonic()
+    main()
+    print(f"Time: {time.monotonic() - start}")

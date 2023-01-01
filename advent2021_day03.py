@@ -45,7 +45,14 @@ def part_two(data: List[str]) -> int:
     return delta * epsilon
 
 
-if __name__ == '__main__':
+def main():
     INPUT = read_data().splitlines()
     print(f"Part one: {part_one(INPUT)}")
     print(f"Part two: {part_two(INPUT)}")
+
+
+if __name__ == '__main__':
+    import time
+    start = time.monotonic()
+    main()
+    print(f"Time: {time.monotonic() - start}")

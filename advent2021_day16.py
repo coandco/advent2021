@@ -79,8 +79,15 @@ class Packet:
         raise Exception("Unknown type!")
 
 
-if __name__ == '__main__':
+def main():
     INPUT = f"{int(read_data(), 16):0{len(read_data())*4}b}"
     packet = Packet(INPUT)
     print(f"Part one: {packet.sum_versions()}")
     print(f"Part two: {packet.get_value()}")
+
+
+if __name__ == '__main__':
+    import time
+    start = time.monotonic()
+    main()
+    print(f"Time: {time.monotonic() - start}")

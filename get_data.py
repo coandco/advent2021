@@ -4,8 +4,8 @@ from pathlib import Path
 # This is a standalone script meant to be run to automatically grab my data
 # for a given year/day and dump it into an automatically-named file.
 
-YEAR_NUM = 2020
-DAY_NUM = 25
+YEAR_NUM = 2021
+DAY_NUM = 1
 
 puzzle = Puzzle(year=YEAR_NUM, day=DAY_NUM)
 

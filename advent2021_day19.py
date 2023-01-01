@@ -1,7 +1,6 @@
 from utils import read_data
 from typing import FrozenSet, NamedTuple, Tuple, Dict, List
-from itertools import combinations, permutations, product
-from pathlib import Path
+from itertools import combinations
 
 
 TRANSFORMATIONS = [
@@ -98,10 +97,10 @@ class Scanner:
         return hash(self.__repr__())
 
 
-if __name__ == '__main__':
-    INPUT = [Scanner(x) for x in read_data().split("\n\n")]
-    known_scanners = newly_known = [INPUT[0]]
-    unknown_scanners = INPUT[1:]
+def main():
+    scanners = [Scanner(x) for x in read_data().split("\n\n")]
+    known_scanners = newly_known = [scanners[0]]
+    unknown_scanners = scanners[1:]
 
     while unknown_scanners:
         assert len(newly_known) > 0
@@ -123,3 +122,10 @@ if __name__ == '__main__':
     offsets = [x.offset for x in known_scanners]
     max_distance = max(x.distance(y) for x, y in combinations(offsets, 2))
     print(f"Part two: {max_distance}")
+
+
+if __name__ == '__main__':
+    import time
+    start = time.monotonic()
+    main()
+    print(f"Time: {time.monotonic() - start}")

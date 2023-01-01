@@ -13,7 +13,7 @@ def run_round_countwise(rules: Dict[str, str], letters: Counter, pairs: Counter)
     return letters, new_pairs
 
 
-if __name__ == '__main__':
+def main():
     template, rules_str = read_data().split("\n\n", 1)
     rules = {(rule := line.split(" -> "))[0]: rule[1] for line in rules_str.splitlines()}
     letter_counts, pair_counts = Counter(template), Counter(template[x:x+2] for x in range(len(template)-1))
@@ -23,3 +23,10 @@ if __name__ == '__main__':
     for _ in range(30):
         letter_counts, pair_counts = run_round_countwise(rules, letter_counts, pair_counts)
     print(f"Part two: {max(letter_counts.values()) - min(letter_counts.values())}")
+
+
+if __name__ == '__main__':
+    import time
+    start = time.monotonic()
+    main()
+    print(f"Time: {time.monotonic() - start}")

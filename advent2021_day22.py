@@ -1,5 +1,5 @@
 from utils import read_data
-from typing import NamedTuple, Iterable, Tuple, List
+from typing import NamedTuple, Tuple, List
 import re
 
 RE_NUMS = re.compile(r'[-]?\d+')
@@ -57,8 +57,15 @@ def part_two(data: List[Tuple[int, Range]]) -> int:
     return pixels_on
 
 
-if __name__ == '__main__':
-    INPUT = [(x[:3].strip(), Range.from_str(x)) for x in read_data().splitlines()]
+def main():
+    ranges = [(x[:3].strip(), Range.from_str(x)) for x in read_data().splitlines()]
 
-    print(f"Part one: {part_one(INPUT)}")
-    print(f"Part two: {part_two(INPUT)}")
+    print(f"Part one: {part_one(ranges)}")
+    print(f"Part two: {part_two(ranges)}")
+
+
+if __name__ == '__main__':
+    import time
+    start = time.monotonic()
+    main()
+    print(f"Time: {time.monotonic() - start}")

@@ -47,8 +47,15 @@ def score_line(line: str) -> PointValue:
     return PointValue(score, corrupted=False)
 
 
-if __name__ == '__main__':
-    INPUT = read_data().splitlines()
-    points = [score_line(x) for x in INPUT]
+def main():
+    lines = read_data().splitlines()
+    points = [score_line(x) for x in lines]
     print(f"Part one: {sum(x.value for x in points if x.corrupted is True)}")
     print(f"Part two: {median(x.value for x in points if x.corrupted is False)}")
+
+
+if __name__ == '__main__':
+    import time
+    start = time.monotonic()
+    main()
+    print(f"Time: {time.monotonic() - start}")

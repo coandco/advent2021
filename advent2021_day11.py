@@ -37,7 +37,7 @@ def run_cycle(grid: np.ndarray) -> int:
     return len(flashed_coords)
 
 
-if __name__ == '__main__':
+def main():
     grid = np.genfromtxt(read_data().splitlines(), delimiter=1, dtype=int)
     total_flashes = 0
     cycles = 0
@@ -50,3 +50,10 @@ if __name__ == '__main__':
         if cycles == 100:
             print(f"Part one: {total_flashes}")
     print(f"Part two: {cycles}")
+
+
+if __name__ == '__main__':
+    import time
+    start = time.monotonic()
+    main()
+    print(f"Time: {time.monotonic() - start}")

@@ -49,8 +49,14 @@ def build_paths(caves: Dict[str, Cave], visit_twice: bool = False) -> int:
     return paths
 
 
-if __name__ == '__main__':
+def main():
     caves = process_input(read_data().splitlines())
     print(f"Part one: {build_paths(caves, visit_twice=False)}")
     print(f"Part two: {build_paths(caves, visit_twice=True)}")
 
+
+if __name__ == '__main__':
+    import time
+    start = time.monotonic()
+    main()
+    print(f"Time: {time.monotonic() - start}")

@@ -34,7 +34,7 @@ def expand_endpoints(first: Coord, second: Coord, count_diagonals: bool = False)
     return points
 
 
-if __name__ == '__main__':
+def main():
     INPUT = [line_to_endpoints(x) for x in read_data().splitlines()]
     counts = Counter()
     for endpoints in INPUT:
@@ -48,3 +48,9 @@ if __name__ == '__main__':
     overlaps = len([x for x in counts if counts[x] > 1])
     print(f"Part two: {overlaps}")
 
+
+if __name__ == '__main__':
+    import time
+    start = time.monotonic()
+    main()
+    print(f"Time: {time.monotonic() - start}")

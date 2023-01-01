@@ -94,10 +94,17 @@ def output_dots(dots: Set[Coord]):
     return "\n".join(output)
 
 
-if __name__ == '__main__':
+def main():
     dots, folds = parse_input(read_data())
     part_one_dots = do_fold(dots, folds[0])
     print(f"Part one: {len(part_one_dots)}")
     for fold in folds:
         dots = do_fold(dots, fold)
     print(f"Part two: {parse_output(output_dots(dots))}")
+
+
+if __name__ == '__main__':
+    import time
+    start = time.monotonic()
+    main()
+    print(f"Time: {time.monotonic() - start}")

@@ -53,8 +53,15 @@ def gen_part_two_grid(part_one_grid: np.ndarray) -> np.ndarray:
     return part_two_grid
 
 
-if __name__ == '__main__':
+def main():
     INPUT = np.genfromtxt(read_data().splitlines(), delimiter=1, dtype=int)
     print(f"Part one: {get_cost_to_goal(INPUT)}")
     PART_TWO_INPUT = gen_part_two_grid(INPUT)
     print(f"Part two: {get_cost_to_goal(PART_TWO_INPUT)}")
+
+
+if __name__ == '__main__':
+    import time
+    start = time.monotonic()
+    main()
+    print(f"Time: {time.monotonic() - start}")

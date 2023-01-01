@@ -1,8 +1,9 @@
 from utils import read_data
-from typing import NamedTuple, Dict, Tuple, Set
+from typing import NamedTuple, Tuple, Set
 
 
 DEBUG = False
+
 
 class Coord(NamedTuple):
     y: int
@@ -60,7 +61,8 @@ def print_field(rights: Set[Coord], downs: Set[Coord]):
     print("\n".join(lines) + "\n")
 
 
-if __name__ == '__main__':
+def main():
+    global SIZE_X, SIZE_Y
     rights, downs, SIZE_X, SIZE_Y = load_map(read_data())
     if DEBUG:
         print_field(rights, downs)
@@ -73,3 +75,10 @@ if __name__ == '__main__':
         if movement == 0:
             break
     print(f"Part one: {cycles}")
+
+
+if __name__ == '__main__':
+    import time
+    start = time.monotonic()
+    main()
+    print(f"Time: {time.monotonic() - start}")

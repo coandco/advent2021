@@ -50,7 +50,15 @@ def part_two(target: TargetArea, max_vy: int) -> int:
     return sum(simulate(vx, vy, target) for vx in range(min_vx, target.max_x+1) for vy in range(target.min_y, max_vy+1))
 
 
-INPUT = TargetArea.from_inputstr(read_data())
-max_vy = abs(INPUT.min_y) - 1
-print(f"Part one: {max_vy * (max_vy + 1) // 2}")
-print(f"Part two: {part_two(INPUT, max_vy)}")
+def main():
+    target_area = TargetArea.from_inputstr(read_data())
+    max_vy = abs(target_area.min_y) - 1
+    print(f"Part one: {max_vy * (max_vy + 1) // 2}")
+    print(f"Part two: {part_two(target_area, max_vy)}")
+
+
+if __name__ == '__main__':
+    import time
+    start = time.monotonic()
+    main()
+    print(f"Time: {time.monotonic() - start}")

@@ -1,4 +1,4 @@
-from typing import List, Tuple, Iterable
+from typing import List, Tuple
 from utils import read_data
 from math import floor
 
@@ -77,7 +77,14 @@ def run_check_raw(check_vals: List[Tuple[int, int, int]], to_check: str) -> bool
     return z == 0
 
 
+def main():
+    digits = parse_input(read_data())
+    print(f"Part one: {recursive_check(digits)}")
+    print(f"Part two: {recursive_check(digits, reverse=True)}")
+
+
 if __name__ == '__main__':
-    INPUT = parse_input(read_data())
-    print(f"Part one: {recursive_check(INPUT)}")
-    print(f"Part two: {recursive_check(INPUT, reverse=True)}")
+    import time
+    start = time.monotonic()
+    main()
+    print(f"Time: {time.monotonic() - start}")

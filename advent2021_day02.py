@@ -61,7 +61,8 @@ PART_TWO_DIRECTIONS = {
     'down': AimedCoord(x=0, y=0, aim=1)
 }
 
-if __name__ == '__main__':
+
+def main():
     PART_ONE_INPUT = [Coord.from_str(line) for line in read_data().splitlines()]
     part_one_position = sum(PART_ONE_INPUT)
     print(f"Part one: {part_one_position.x * part_one_position.y}")
@@ -69,3 +70,10 @@ if __name__ == '__main__':
     PART_TWO_INPUT = [AimedCoord.from_str(line) for line in read_data().splitlines()]
     part_two_position = sum(PART_TWO_INPUT)
     print(f"Part two: {part_two_position.x * part_two_position.y}")
+
+
+if __name__ == '__main__':
+    import time
+    start = time.monotonic()
+    main()
+    print(f"Time: {time.monotonic() - start}")

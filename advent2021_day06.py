@@ -11,7 +11,7 @@ def run_cycle(current_state: Counter) -> Counter:
     return new_state
 
 
-if __name__ == '__main__':
+def main():
     INPUT = [int(x) for x in read_data().split(",")]
     state = Counter(INPUT)
     for _ in range(80):
@@ -22,3 +22,10 @@ if __name__ == '__main__':
     for _ in range(256):
         state = run_cycle(state)
     print(f"Part two: {sum(state.values())}")
+
+
+if __name__ == '__main__':
+    import time
+    start = time.monotonic()
+    main()
+    print(f"Time: {time.monotonic() - start}")

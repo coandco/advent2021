@@ -10,8 +10,15 @@ def count_increases(data: Iterable) -> int:
     return num_increases
 
 
-if __name__ == '__main__':
+def main():
     part_one_input = [int(x) for x in read_data().splitlines()]
-    part_two_input = [sum(x) for x in zip(part_one_input, part_one_input[1:], part_one_input[2:])]
     print(f"Part one: {count_increases(part_one_input)}")
+    part_two_input = [sum(x) for x in zip(part_one_input, part_one_input[1:], part_one_input[2:])]
     print(f"Part two: {count_increases(part_two_input)}")
+
+
+if __name__ == '__main__':
+    import time
+    start = time.monotonic()
+    main()
+    print(f"Time: {time.monotonic() - start}")

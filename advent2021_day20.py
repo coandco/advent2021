@@ -1,5 +1,5 @@
 from utils import read_data
-from typing import NamedTuple, Tuple, Set, List
+from typing import NamedTuple, Set, List
 
 
 class Coord(NamedTuple):
@@ -85,7 +85,7 @@ class Grid:
         return new_grid
 
 
-if __name__ == '__main__':
+def main():
     floormap = Grid(read_data())
     for _ in range(2):
         floormap.run_cycle()
@@ -93,3 +93,10 @@ if __name__ == '__main__':
     for _ in range(48):
         floormap.run_cycle()
     print(f"Part two: {len(floormap.grid)}")
+
+
+if __name__ == '__main__':
+    import time
+    start = time.monotonic()
+    main()
+    print(f"Time: {time.monotonic() - start}")

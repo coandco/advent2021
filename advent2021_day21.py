@@ -73,8 +73,15 @@ def part_two(starting_locs: List[int]) -> int:
     return max(winning_states)
 
 
-if __name__ == '__main__':
+def main():
     # It's convenient to have the player locs be 0-9 instead of 1-10 so modulo works
     player_locs = [int(x[-2:].strip())-1 for x in read_data().splitlines()]
     print(f"Part one: {part_one(player_locs)}")
     print(f"Part two: {part_two(player_locs)}")
+
+
+if __name__ == '__main__':
+    import time
+    start = time.monotonic()
+    main()
+    print(f"Time: {time.monotonic() - start}")

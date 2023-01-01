@@ -75,6 +75,14 @@ class Line(NamedTuple):
         return int(real_output)
 
 
-INPUT = [Line.from_str(x) for x in read_data().splitlines()]
-print(f"Part one: {sum([x.count_part_one() for x in INPUT])}")
-print(f"Part two: {sum([x.parse_output() for x in INPUT])}")
+def main():
+    parsed = [Line.from_str(x) for x in read_data().splitlines()]
+    print(f"Part one: {sum([x.count_part_one() for x in parsed])}")
+    print(f"Part two: {sum([x.parse_output() for x in parsed])}")
+
+
+if __name__ == '__main__':
+    import time
+    start = time.monotonic()
+    main()
+    print(f"Time: {time.monotonic() - start}")

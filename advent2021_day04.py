@@ -63,7 +63,7 @@ def run_bingo(called_numbers: List[int], boards: List[np.ndarray]) -> Tuple[int,
             return part_one_score * part_one_number, part_two_score * number
 
 
-if __name__ == '__main__':
+def main():
     INPUT = read_data().split("\n\n")
     called_numbers = [int(x) for x in INPUT[0].split(",")]
     boards = [read_bingo_board(x) for x in INPUT[1:]]
@@ -71,5 +71,11 @@ if __name__ == '__main__':
     print(f"Part one: {part_one}")
     print(f"Part two: {part_two}")
 
+
+if __name__ == '__main__':
+    import time
+    start = time.monotonic()
+    main()
+    print(f"Time: {time.monotonic() - start}")
 
 

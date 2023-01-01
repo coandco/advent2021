@@ -47,7 +47,7 @@ def get_basin_size(field: np.ndarray, loc: Coord) -> int:
     return len(points_in_basin)
 
 
-if __name__ == '__main__':
+def main():
     INPUT = [[int(x) for x in y] for y in read_data().splitlines()]
     INPUT_NP = np.array(INPUT, dtype=int)
     low_spots = set()
@@ -59,3 +59,10 @@ if __name__ == '__main__':
     print(f"Part one: {sum(low_spot_values) + len(low_spot_values)}")
     basin_sizes = sorted((get_basin_size(INPUT_NP, x) for x in low_spots), reverse=True)
     print(f"Part two: {prod(basin_sizes[:3])}")
+
+
+if __name__ == '__main__':
+    import time
+    start = time.monotonic()
+    main()
+    print(f"Time: {time.monotonic() - start}")
